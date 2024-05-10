@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -53,5 +55,39 @@ public class UserControllerTest {
         assertEquals(0, u.getId());
         assertEquals(USERNAME, u.getUsername());
         assertEquals(PASSWORD_HASHED, u.getPassword());
+    }
+
+    @Test
+    public void findById() {
+        Long id = 1L;
+        User user = TestUtils.createUser(USERNAME, PASSWORD);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+        ResponseEntity<User> responseEntity = userController.findById(id);
+
+        assertNotNull(responseEntity);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+
+        User userBody = responseEntity.getBody();
+        assertNotNull(userBody);
+        assertEquals(id, Long.valueOf(userBody.getId()));
+        assertEquals(USERNAME, userBody.getUsername());
+        assertEquals(PASSWORD, userBody.getPassword());
+    }
+
+    @Test
+    public void findByUsername() {
+        Long id = 1L;
+        User user = TestUtils.createUser(USERNAME, PASSWORD);
+        when(userRepository.findByUsername(USERNAME)).thenReturn(user);
+        ResponseEntity<User> responseEntity = userController.findByUserName(USERNAME);
+        assertNotNull(responseEntity);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+
+        User userBody = responseEntity.getBody();
+        assertNotNull(userBody);
+        assertEquals(id, Long.valueOf(userBody.getId()));
+        assertEquals(USERNAME, userBody.getUsername());
+        assertEquals(PASSWORD, userBody.getPassword());
     }
 }
