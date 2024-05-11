@@ -2,6 +2,8 @@ package com.example.demo.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 
 @Component
 public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilter {
+    private final Logger logger = LoggerFactory.getLogger(JWTAuthenticationVerficationFilter.class);
+
     public JWTAuthenticationVerficationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -47,9 +51,16 @@ public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilte
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        logger.info("Attempting JWT authentication verification.");
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        if (authentication != null) {
+            logger.info("JWT authentication verification successful for user: {}", authentication.getName());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            logger.warn("JWT authentication verification failed.");
+        }
+
         chain.doFilter(req, res);
     }
 }

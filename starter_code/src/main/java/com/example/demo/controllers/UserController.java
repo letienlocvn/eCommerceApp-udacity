@@ -36,6 +36,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        logger.info("Request received to create user with username: {}", createUserRequest.getUsername());
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
         Cart cart = new Cart();
@@ -44,24 +45,34 @@ public class UserController {
 
         if (createUserRequest.getPassword().length() < 7 ||
                 !createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())) {
+            logger.warn("Invalid password or password mismatch for user: {}", createUserRequest.getUsername());
             return ResponseEntity.badRequest().build();
         }
         user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
         userRepository.save(user);
-        logger.info("Create User successfully with username {}", createUserRequest.getUsername());
+        logger.info("User created successfully with username: {}", createUserRequest.getUsername());
         return ResponseEntity.ok(user);
     }
 
 
     @GetMapping("/id/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
+        logger.info("Request received to retrieve user by ID: {}", id);
         return ResponseEntity.of(userRepository.findById(id));
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<User> findByUserName(@PathVariable String username) {
+        logger.info("Request received to retrieve user by username: {}", username);
         User user = userRepository.findByUsername(username);
-        return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+        if (user == null) {
+            logger.warn("User not found with username: {}", username);
+            return ResponseEntity.notFound().build();
+        } else {
+            logger.info("User found with username: {}", username);
+            return ResponseEntity.ok(user);
+        }
+        // return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
 }
