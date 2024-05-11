@@ -13,16 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
+import static com.example.demo.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UserControllerTest {
-
-    public static final String USERNAME = "loclt7";
-    public static final String PASSWORD = "12345678";
-    public static final String PASSWORD_HASHED = "PASSWORD_HASHED";
 
     private UserController userController;
 

@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestUtils {
+
+    public static final String USERNAME = "loclt7";
+    public static final String PASSWORD = "12345678";
+    public static final String PASSWORD_HASHED = "PASSWORD_HASHED";
     public static void injectObjects(Object target, String fieldName, Object objectToInject) {
         boolean wasPrivate = false;
 
@@ -80,4 +84,5 @@ public class TestUtils {
         }
         return orders;
     }
+
 }
