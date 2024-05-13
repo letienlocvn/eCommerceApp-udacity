@@ -72,7 +72,6 @@ public class UserController {
             logger.info("User found with username: {}", username);
             return ResponseEntity.ok(user);
         }
-        // return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }
 
 }

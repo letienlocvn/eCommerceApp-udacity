@@ -43,7 +43,6 @@ public class ItemController {
 			logger.warn("Item not found with ID: {}", id);
 			return ResponseEntity.notFound().build();
 		}
-		// return ResponseEntity.of(itemRepository.findById(id));
 	}
 	
 	@GetMapping("/name/{name}")
@@ -57,9 +56,7 @@ public class ItemController {
 			logger.info("Retrieved {} items with name: {}", items.size(), name);
 			return ResponseEntity.ok(items);
 		}
-//		return items == null || items.isEmpty() ? ResponseEntity.notFound().build()
-//				: ResponseEntity.ok(items);
-			
+
 	}
 	
 }
