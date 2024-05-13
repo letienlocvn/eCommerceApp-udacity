@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
 
 class OrderControllerTest {
 
-    // TODO: order requests failures
 
     private OrderController orderController;
     private final OrderRepository orderRepository = mock(OrderRepository.class);
