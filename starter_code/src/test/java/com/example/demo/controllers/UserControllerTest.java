@@ -14,8 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
 import static com.example.demo.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,6 +52,24 @@ public class UserControllerTest {
         assertEquals(0, u.getId());
         assertEquals(USERNAME, u.getUsername());
         assertEquals(PASSWORD_HASHED, u.getPassword());
+    }
+
+    @Test
+    public void createUserFailure() {
+        CreateUserRequest userRequest = new CreateUserRequest();
+        userRequest.setUsername(USERNAME);
+        userRequest.setPassword(PASSWORD);
+        userRequest.setConfirmPassword(PASSWORD);
+
+        userRequest.setConfirmPassword("invalid_confirmation");
+
+        final ResponseEntity<User> response = userController.createUser(userRequest);
+
+        assertNotNull(response);
+        assertEquals(400, response.getStatusCodeValue());
+
+        User u = response.getBody();
+        assertNull(u);
     }
 
     @Test

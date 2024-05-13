@@ -14,8 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static com.example.demo.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +67,23 @@ class OrderControllerTest {
         List<UserOrder> retrievedOrders = responseEntity.getBody();
         assertNotNull(retrievedOrders);
         assertEquals(orders.size(), retrievedOrders.size());
+
+    }
+
+    @Test
+    void getOrdersForUserNullTest() {
+        User user = createUser(USERNAME, PASSWORD);
+        List<UserOrder> orders = createOrders(user.getUsername(), PASSWORD);
+
+        when(userRepository.findByUsername(USERNAME)).thenReturn(null);
+
+        ResponseEntity<List<UserOrder>> responseEntity = orderController.getOrdersForUser(USERNAME);
+
+        assertNotNull(responseEntity);
+        assertEquals(404, responseEntity.getStatusCodeValue());
+
+        List<UserOrder> retrievedOrders = responseEntity.getBody();
+        assertNull(retrievedOrders);
 
     }
 }
